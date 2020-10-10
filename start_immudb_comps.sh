@@ -22,7 +22,7 @@ echo ">>> Starting immudb Server ..."
 echo
 
 docker run -it -d --name immudb -p 3322:3322 -p 9497:9497             \
-       -v "/$(pwd)/.immudb_data:/var/lib/immudb" --network immudb_net \
+       -v "$(pwd)/.immudb_data:/var/lib/immudb" --network immudb_net \
        codenotary/immudb:latest
 
 sleep 3

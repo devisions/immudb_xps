@@ -6,7 +6,15 @@ Experiments using [immudb](https://codenotary.io/technologies/immudb/), a lightw
 
 ## Starting the components
 
-Use `start_immudb_comps.sh` script that starts the server (`immudb`) and the gateway (`immugw`).
+Use `start_immudb_comps.sh` script that starts:
+- the server (`immudb`)
+- the gateway (`immugw`)
+
+Besides these two, there are two command-line interface (CLI) clients:
+- the standard client (`immuclient`)
+- the Admin client (`immuadmin`)
+
+![immudb components](./docs/immudb.png)
 
 <br/>
 
@@ -56,7 +64,7 @@ value:		v1
 hash:		a02fd8cbc78003ad1f86000bbf936f25636d0f48be21572c66eee0bb843b8c8f
 time:		2020-10-02 15:34:45 +0300 EEST
 
-$ immuclient current             # getting the last merkle tree root and index stored locally
+$ immuclient current             # getting the last merkle tree index and root stored locally
 index:		2
 hash:		f5f84dbfe5dcfb8cfd4512aff1f30f813b83f1a472ae16b4779055ed5c9b1b51
 
