@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/codenotary/immudb/pkg/api/schema"
 	immuclient "github.com/codenotary/immudb/pkg/client"
 	"google.golang.org/grpc/metadata"
 )
@@ -29,6 +30,20 @@ func main() {
 	md := metadata.Pairs("authorization", lr.Token)
 	ctx = metadata.NewOutgoingContext(context.Background(), md)
 
+	dbs, err := client.DatabaseList(ctx)
+	if err != nil {
+		log.Fatal(">>> Failed to get the list of databases. Reason: ", err)
+	}
+	if len(dbs.Databases) > 1 {
+		udr, err := client.UseDatabase(ctx, &schema.Database{Databasename: "defaultdb"})
+		if err != nil {
+			log.Fatal(">>> Failed to use defaultdb. Reason:", err)
+		}
+		md.Set("authorization", udr.Token)
+		ctx = metadata.NewOutgoingContext(context.Background(), md)
+		log.Println(">>> Using the default db.")
+	}
+
 	idx1, err := client.Set(ctx, []byte("k1"), []byte("v1.0"))
 	if err != nil {
 		log.Println(">>> Failed to set k1,v1.0 Reason:", err)
@@ -42,6 +57,8 @@ func main() {
 	log.Println("Set k1,v1.1 and got index", idx2.GetIndex())
 
 	si, _ := client.ByIndex(ctx, idx1.Index)
+	// Note here that the `StructuredValue`'s Value contains
+	// a timestamp (.Timestamp) and the provided value (.Payload).
 	log.Printf(">>> ByIndex(%d) => %+v\n", idx1.Index, si)
 
 	root, _ := client.CurrentRoot(ctx)
