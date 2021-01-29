@@ -30,17 +30,18 @@ func main() {
 	md := metadata.Pairs("authorization", lr.Token)
 	ctx = metadata.NewOutgoingContext(context.Background(), md)
 
-	udr, err := client.UseDatabase(ctx, &schema.Database{Databasename: "lcsnapfhmxgz"})
+	udr, err := client.UseDatabase(ctx, &schema.Database{Databasename: "lcsnapcyvvxl"})
 	if err != nil {
 		log.Fatal(">>> Failed to use the database. Reason:", err)
 	}
 	md.Set("authorization", udr.Token)
 	ctx = metadata.NewOutgoingContext(context.Background(), md)
 
-	si, _ := client.ByIndex(ctx, 6)
+	idx := uint64(13)
+	si, _ := client.ByIndex(ctx, idx)
 	// Note here that the `StructuredValue`'s Value contains
 	// a timestamp (.Timestamp) and the provided value (.Payload).
-	log.Printf(">>> ByIndex(%d) => %+v\n", 6, si)
+	log.Printf(">>> ByIndex(%d) => %+v\n", idx, si)
 
 	root, _ := client.CurrentRoot(ctx)
 	log.Printf(">>> CurrentRoot => %+v\n", root)
