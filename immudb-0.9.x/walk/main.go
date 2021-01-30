@@ -59,16 +59,14 @@ func main() {
 	md = metadata.Pairs("authorization", udr.Token)
 	ctx = metadata.NewOutgoingContext(context.Background(), md)
 
-	// bool keepWalking := true
 	i := uint64(1)
 
-	// for keepWalking {
 	for {
 		tx, err := client.TxByID(ctx, i)
 		if err != nil {
 			e, ok := status.FromError(err)
 			if ok {
-				// Doesn't work
+				// This doesn't work since the error is "Reason: rpc error: code = Unknown desc = tx not found".
 				// if e.Code() == codes.NotFound {
 				// 	end(client)
 				// }
@@ -78,8 +76,9 @@ func main() {
 			}
 			endNow(client, fmt.Sprintf("Failed to TxByID with tx:%d", i), err)
 		}
+		log.Printf("Tx ID: %d\n", i)
 		for _, txe := range tx.Entries {
-			log.Printf("TxEntry key:%s\n", txe.Key)
+			log.Printf("TxEntry key: %s\n", txe.Key)
 		}
 
 		state, err := client.CurrentState(ctx)
