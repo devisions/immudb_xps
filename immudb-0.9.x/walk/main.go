@@ -59,10 +59,10 @@ func main() {
 	md = metadata.Pairs("authorization", udr.Token)
 	ctx = metadata.NewOutgoingContext(context.Background(), md)
 
-	i := uint64(1)
+	txID := uint64(1)
 
 	for {
-		tx, err := client.TxByID(ctx, i)
+		tx, err := client.TxByID(ctx, txID)
 		if err != nil {
 			e, ok := status.FromError(err)
 			if ok {
@@ -74,21 +74,28 @@ func main() {
 					end(client)
 				}
 			}
-			endNow(client, fmt.Sprintf("Failed to TxByID with tx:%d", i), err)
+			endNow(client, fmt.Sprintf("Failed to TxByID with tx:%d", txID), err)
 		}
-		log.Printf("Tx ID: %d\n", i)
+		log.Printf("Tx ID: %d\n", txID)
+		sc := *client.GetServiceClient()
+
 		for _, txe := range tx.Entries {
-			log.Printf("TxEntry key: %s\n", txe.Key)
+			entry, err := sc.Get(ctx, &schema.KeyRequest{Key: txe.Key, AtTx: txID})
+			if err != nil {
+				log.Printf("Failed to get the value of key '%s'. Reason: %v\n", txe.Key, err)
+				continue
+			}
+			log.Printf("TxEntry key: %s value: %s\n", txe.Key, entry.Value)
 		}
 
 		state, err := client.CurrentState(ctx)
 		if err != nil {
 			endNow(client, "Failed to CurrentState.", err)
 		}
-		if state.TxId == i {
+		if state.TxId == txID {
 			end(client)
 		}
-		i++
+		txID++
 	}
 
 }
