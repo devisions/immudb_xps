@@ -1,0 +1,14 @@
+
+/target/
+/bin/
+
+**/.DS_Store
+
+.classpath
+.project
+.settings/
+
+*.iml
+.idea
+
+helloworld_immudb_roots

@@ -59,7 +59,7 @@ func main() {
 
 	entries, err := client.Scan(ctx, &schema.ScanRequest{
 		SinceTx: 1,
-		Limit:   3,
+		Limit:   4,
 		Desc:    false,
 	})
 	if err != nil {
