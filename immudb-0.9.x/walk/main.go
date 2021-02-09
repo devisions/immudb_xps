@@ -55,6 +55,8 @@ func main() {
 	if err != nil {
 		endNow(client, "Failed to UseDatabase", err)
 	}
+	log.Printf("Connected to '%s' database.", cliArgs.dbName)
+
 	// Recollect the token that we get when using/switching the database.
 	md = metadata.Pairs("authorization", udr.Token)
 	ctx = metadata.NewOutgoingContext(context.Background(), md)
@@ -71,6 +73,9 @@ func main() {
 				// 	end(client)
 				// }
 				if strings.Contains(e.Message(), "tx not found") {
+					if txID == 1 {
+						log.Println("The database is empty.")
+					}
 					end(client)
 				}
 			}
@@ -102,14 +107,15 @@ func main() {
 
 func end(client client.ImmuClient) {
 	if err := client.Disconnect(); err != nil {
-		log.Printf(">>> Disconnect failed with error: %v", err)
+		log.Printf("Disconnect failed with error: %v", err)
 		os.Exit(1)
 	}
+	log.Println("Disconnect complete.")
 	os.Exit(0)
 }
 
 func endNow(client client.ImmuClient, msg string, err error) {
 	_ = client.Disconnect()
-	errmsg := fmt.Sprintf(">>> %s Reason: %v", msg, err)
+	errmsg := fmt.Sprintf("%s Reason: %v", msg, err)
 	log.Fatal(errmsg)
 }
