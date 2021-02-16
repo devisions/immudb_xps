@@ -16,3 +16,6 @@
 
 ## Local persistent data directory.
 .immudb_data
+
+## Local state files
+.state-*
