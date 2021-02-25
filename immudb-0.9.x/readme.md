@@ -7,7 +7,11 @@ Included:
 
 Usage example: `go run walk/main.go -pass {password} -db {dbName}`.
 
-Note that the arguments' default values are quite useful:
+Note that the arguments' default values are the same as the server ones.<br/>
+Therefore, you can just run the sample without any additional argument,<br/>
+just like this: `go run walk/main.go`
+
+To get the complete usage help, pass `-h` argument:
 ```shell
 $ go run walk/main.go -h                                                 
 Usage of /tmp/go-build751243515/b001/exe/main:
